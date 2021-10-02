@@ -6,12 +6,18 @@ const BaseTag = require("./BaseTag");
  */
 class TwitterCard extends BaseTag {
   async liquidRender(scope, hash) {
+    // Use custom Twitter image if defined
+    const twitterImage = scope.contexts[0].twitterImage ?? this.config.twitterImage
+    const hasTwitterImage = typeof twitterImage !== 'undefined'
+
     // Fallback on using image in config if available and none is set in front matter.
     const hasConfigImageOnly = !scope.contexts[0].image && this.config.image;
 
-    const image = hasConfigImageOnly
-      ? this.config.image
-      : scope.contexts[0].image;
+    const image = hasTwitterImage
+      ? twitterImage
+      : hasConfigImageOnly
+        ? this.config.image
+        : scope.contexts[0].image;
 
     // Add base url from config to front matter image value
     const baseImage = this.config.url + image;
@@ -38,9 +44,16 @@ class TwitterCard extends BaseTag {
   }
 
   nunjucksRender(self, context) {
+    // Use custom Twitter image if defined
+    const twitterImage = context.ctx.twitterImage ?? self.config.twitterImage
+    const hasTwitterImage = typeof twitterImage !== 'undefined'
+
     // Fallback on using image in config if available and none is set in front matter.
-    const image =
-      !context.ctx.image && self.config.image
+    const hasConfigImageOnly = !context.ctx.image && self.config.image;
+
+    const image = hasTwitterImage
+      ? twitterImage
+      : hasConfigImageOnly
         ? self.config.image
         : context.ctx.image;
 
