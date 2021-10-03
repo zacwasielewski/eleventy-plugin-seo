@@ -1,3 +1,4 @@
+const { first, isEmpty } = require("lodash");
 const BaseTag = require("./BaseTag");
 
 /**
@@ -6,8 +7,11 @@ const BaseTag = require("./BaseTag");
  */
 class TwitterCard extends BaseTag {
   async liquidRender(scope, hash) {
-    // Use custom Twitter image if defined
-    const twitterImage = scope.contexts[0].twitterImage ?? this.config.twitterImage
+    // Use custom Twitter image, if one is defined in the front matter or config.
+    const twitterImage = [
+      scope.contexts[0].twitterImage,
+      this.config.twitterImage
+    ].find(_ => typeof _ !== 'undefined');
     const hasTwitterImage = typeof twitterImage !== 'undefined'
 
     // Fallback on using image in config if available and none is set in front matter.
@@ -44,8 +48,11 @@ class TwitterCard extends BaseTag {
   }
 
   nunjucksRender(self, context) {
-    // Use custom Twitter image if defined
-    const twitterImage = context.ctx.twitterImage ?? self.config.twitterImage
+    // Use custom Twitter image, if one is defined in the front matter or config.
+    const twitterImage = [
+      context.ctx.twitterImage,
+      self.config.twitterImage
+    ].find(_ => typeof _ !== 'undefined');
     const hasTwitterImage = typeof twitterImage !== 'undefined'
 
     // Fallback on using image in config if available and none is set in front matter.
