@@ -1,4 +1,3 @@
-const { first, isEmpty } = require("lodash");
 const BaseTag = require("./BaseTag");
 
 /**
